@@ -3,6 +3,32 @@
 <script>
     window.__GEONODE_CONFIG__.overrideLocalConfig = function(localConfig, _) {
         // Here the localConfig can be overridden and/or extended
+
+        // console.log(localConfig);
+        
+        // Define a custom link for the Map Viewer
+        const customMapViewerLink = {
+            "type": "link",
+            "href": "{'http://example.com'}",
+            "target": "_blank",
+            "label": "Custom 1",
+            "disableIf": "{!(state('user'))}"
+        };
+
+        // Locate the ActionNavbar plugin in the Map Viewer configuration
+        const mapViewerActionNavBar = localConfig.plugins.map_viewer.find(item => item.name === "ActionNavbar");
+
+        // Find the index of the DatasetsCatalog menu item
+        let datasetPluginIndex = mapViewerActionNavBar.cfg.leftMenuItems.findIndex(item => item.name === "DatasetsCatalog");
+
+        if (datasetPluginIndex != -1) {
+            // If the DatasetsCatalog menu item is found, insert the custom link before it
+            mapViewerActionNavBar.cfg.leftMenuItems.splice(datasetPluginIndex, 0, customMapViewerLink);
+        } else {
+            // If the DatasetsCatalog menu item is not found, append the custom link at the end of the menu items
+            mapViewerActionNavBar.cfg.leftMenuItems.push(customMapViewerLink);
+        }
+
         return localConfig;
     };
 </script>
